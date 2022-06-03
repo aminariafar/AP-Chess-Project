@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Board.h
+Pieces.h
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Pieces.h
+SFML/Graphics.hpp
+-
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Helper.h
+iostream
+-
+vector
+-
+SFML/Graphics.hpp
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/SFML/Graphics.hpp
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/ParentPiece.h
+Helper.h
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Helper.h
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Pieces.h
+ParentPiece.h
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/ParentPiece.h
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/src/Board.cpp
+../headers/Board.h
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Board.h
+
+/home/amin/Desktop/UT/term2/ap/project/phase2/src/main.cpp
+../headers/Board.h
+/home/amin/Desktop/UT/term2/ap/project/phase2/headers/Board.h
+
