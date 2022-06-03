@@ -563,13 +563,12 @@ void Board :: run()
             {
                 window->close();
             }
-            if (!isFinished()) 
-            {
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
-                    mouseClicked(sf::Mouse::getPosition(*(window)));
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-                    resetBoard();
-            }
+            if (!isFinished() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+                mouseClicked(sf::Mouse::getPosition(*(window)));
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+                resetBoard();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
+                undo();
         }
         window->clear(sf::Color(63, 44, 14));
         updateStatusText();
@@ -646,4 +645,13 @@ void Board :: resetBoard()
 {
     // cout << "reset??\n";
     init(primaryBoard);
+}
+
+void Board :: undo()
+{
+    // cout << "undo??" << endl;
+    reverseMove();
+    finish = false;
+    selectedPiece = nullptr;
+    clickNo = 1;
 }
