@@ -559,11 +559,16 @@ void Board :: run()
     {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::Closed) 
+            {
                 window->close();
             }
-            if (!isFinished() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                mouseClicked(sf::Mouse::getPosition(*(window)));
+            if (!isFinished()) 
+            {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
+                    mouseClicked(sf::Mouse::getPosition(*(window)));
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+                    resetBoard();
             }
         }
         window->clear(sf::Color(63, 44, 14));
@@ -635,4 +640,10 @@ void Board :: secondClick(int row, int column)
         return;
     else
         rearrangePieces(selectedPiece->positionX, selectedPiece->positionY, row, column);
+}
+
+void Board :: resetBoard()
+{
+    // cout << "reset??\n";
+    init(primaryBoard);
 }
