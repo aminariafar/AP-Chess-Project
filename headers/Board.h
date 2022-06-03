@@ -54,6 +54,8 @@ public:
 
     void undo();
 
+    vector<Spot> getAllValidMoves(Piece* piecePtr);
+
 protected:
 
     void rearrangePieces(int x1, int y1, int x2, int y2);
@@ -77,6 +79,7 @@ protected:
     sf::Texture boardTexture;
     sf::RenderWindow* window;
     sf::RectangleShape redRect, yellowRect;
+    sf::CircleShape yellowCircle;
     int clickNo;
 };
 

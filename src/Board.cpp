@@ -615,6 +615,9 @@ void Board :: loadBoardTextures()
 
     yellowRect.setSize(sf::Vector2f(cellSize, cellSize));
     yellowRect.setFillColor(sf::Color::Yellow);
+
+    yellowCircle.setRadius(cellSize/6);
+    yellowCircle.setFillColor(sf::Color::Yellow);
 }
 
 void Board :: mouseClicked(const sf::Vector2i& position)
@@ -677,4 +680,32 @@ void Board :: displaySelection()
 {
     yellowRect.setPosition(getCellPosition(selectedPiece->positionX, selectedPiece->positionY));
     window->draw(yellowRect);
+    sf::Vector2f tempVector;
+    vector<Spot> spots = getAllValidMoves(selectedPiece);
+    for (int i = 0; i < spots.size(); i++)
+    {
+        if (boardMatrix[spots[i].x][spots[i].y] != nullptr) continue;
+        tempVector = getCellPosition(spots[i].x, spots[i].y);
+        tempVector.x += cellSize/3;
+        tempVector.y += cellSize/3;
+        yellowCircle.setPosition(tempVector);
+        window->draw(yellowCircle);
+    }
+}
+
+vector<Spot> Board :: getAllValidMoves(Piece* piecePtr)
+{
+    vector<Spot> spots;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+        {
+            if (validMove(piecePtr->positionX, piecePtr->positionY, i, j))
+            {
+                Spot s;
+                s.x = i;
+                s.y = j;
+                spots.push_back(s);
+            }
+        }
+    return spots;
 }
