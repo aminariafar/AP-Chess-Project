@@ -76,6 +76,7 @@ protected:
     sf::Sprite boardImg;
     sf::Texture boardTexture;
     sf::RenderWindow* window;
+    sf::RectangleShape redRect, yellowRect;
     int clickNo;
 };
 

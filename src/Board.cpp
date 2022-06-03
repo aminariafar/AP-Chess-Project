@@ -581,10 +581,21 @@ void Board :: draw()
 {
     boardImg.setPosition(0.f, 0.f);
     window->draw(boardImg);
+    if (currentTurn == 1 && inCheck('W'))
+    {
+        redRect.setPosition(getCellPosition(whiteKing->positionX, whiteKing->positionY));
+        window->draw(redRect);
+    }
+    if (currentTurn == -1 && inCheck('B'))
+    {
+        redRect.setPosition(getCellPosition(blackKing->positionX, blackKing->positionY));
+        window->draw(redRect);
+    }
     for (int row = 0; row < 8; row++)
         for (int column = 0; column < 8; column++)
         {
             if (boardMatrix[row][column] == nullptr) continue;
+            if (boardMatrix[row][column] == selectedPiece) displaySelection();
             boardMatrix[row][column]->sprite.setPosition(getCellPosition(row, column));
             window->draw(boardMatrix[row][column]->sprite);
         }
@@ -598,6 +609,12 @@ void Board :: loadBoardTextures()
     float scaleX = 400.f / boardImg.getTexture()->getSize().x;
     float scaleY = 400.f / boardImg.getTexture()->getSize().y;
     boardImg.setScale(scaleX, scaleY);
+
+    redRect.setSize(sf::Vector2f(cellSize, cellSize));
+    redRect.setFillColor(sf::Color::Red);
+
+    yellowRect.setSize(sf::Vector2f(cellSize, cellSize));
+    yellowRect.setFillColor(sf::Color::Yellow);
 }
 
 void Board :: mouseClicked(const sf::Vector2i& position)
@@ -654,4 +671,10 @@ void Board :: undo()
     finish = false;
     selectedPiece = nullptr;
     clickNo = 1;
+}
+
+void Board :: displaySelection()
+{
+    yellowRect.setPosition(getCellPosition(selectedPiece->positionX, selectedPiece->positionY));
+    window->draw(yellowRect);
 }
