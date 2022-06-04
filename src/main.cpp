@@ -7,7 +7,7 @@ int main()
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
             cin >> boardStr[i][j];
-    RenderWindow window (VideoMode(400, 430), "Amin's Chess", Style::Titlebar | Style::Close);
+    RenderWindow window (VideoMode(500, 560), "Amin's Chess", Style::Titlebar | Style::Close);
     Board currentBoard(&window);
     currentBoard.init(boardStr);
     currentBoard.run();

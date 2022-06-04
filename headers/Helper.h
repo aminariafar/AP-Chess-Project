@@ -4,7 +4,7 @@
 #include "SFML/Graphics.hpp"
 using namespace std;
 
-static int cellSize = 45, cellOffset = 20;
+static int cellSize = 59, cellOffset = 19;
 
 inline int absolute(int x)
 { return (x >= 0) ? x : -x; }

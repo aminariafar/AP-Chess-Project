@@ -138,12 +138,12 @@ void Board :: init(string s[8][8])
     for (int i = whiteIndex; i < 16; i++)
         currentPieces[1][i] = nullptr;
 
-    font.loadFromFile("resources/fonts/Caviar_Dreams_Bold.ttf");
+    font.loadFromFile("resources/fonts/Copenhagen-z3Z0.ttf");
     statusText.setFont(font);
-    statusText.setCharacterSize(15);
+    statusText.setCharacterSize(50);
     statusText.setStyle(sf::Text::Bold);
-    statusText.setFillColor(sf::Color::White);
-    statusText.setPosition(130.f, 405.f);
+    statusText.setFillColor(sf::Color(151, 149, 147));
+    statusText.setPosition(170.f, 505.f);
     updateStatusText();
 }
 
@@ -539,16 +539,16 @@ void Board :: updateStatusText()
     if (finish)
     {
         if (winner == 'W')
-            statusText.setString("Player WHITE won!!!");
+            statusText.setString("Player white won!");
         else
-            statusText.setString("Player BLACK won!!!");
+            statusText.setString("Player black won!");
     }
     else
     {
         if(currentTurn == 1)
-            statusText.setString("It's white's turn!");
+            statusText.setString("It's white's turn");
         else
-            statusText.setString("It's black's turn!");
+            statusText.setString("It's black's turn");
     }
 }
 
@@ -584,7 +584,7 @@ void Board :: run()
                     undo();
             }
         }
-        window->clear(sf::Color(63, 44, 14));
+        window->clear(sf::Color(48, 46, 43));
         updateStatusText();
         draw();
         window->display();
@@ -593,7 +593,7 @@ void Board :: run()
 
 void Board :: draw()
 {
-    boardImg.setPosition(0.f, 0.f);
+    boardImg.setPosition(0.f, 11.f);
     window->draw(boardImg);
     if (currentTurn == 1 && inCheck('W'))
     {
@@ -621,8 +621,8 @@ void Board :: loadBoardTextures()
 {
     boardTexture.loadFromFile("resources/images/board.png");
     boardImg.setTexture(boardTexture);
-    float scaleX = 400.f / boardImg.getTexture()->getSize().x;
-    float scaleY = 400.f / boardImg.getTexture()->getSize().y;
+    float scaleX = 500.f / boardImg.getTexture()->getSize().x;
+    float scaleY = 500.f / boardImg.getTexture()->getSize().y;
     boardImg.setScale(scaleX, scaleY);
 
     redRect.setSize(sf::Vector2f(cellSize, cellSize));
