@@ -554,21 +554,35 @@ void Board :: updateStatusText()
 
 void Board :: run()
 {
+    bool lockPressing;
     window->display();
     while (window->isOpen())
     {
         sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
+        while (window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
             {
                 window->close();
             }
-            if (!isFinished() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) 
-                mouseClicked(sf::Mouse::getPosition(*(window)));
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-                resetBoard();
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
-                undo();
+            if (!isFinished() && event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left && !lockPressing)
+                {
+                    mouseClicked(sf::Mouse::getPosition(*window));
+                    lockPressing = true;
+                }
+            }
+            if (event.type == sf::Event::MouseButtonReleased)
+                if(event.mouseButton.button == sf::Mouse::Left)
+                    lockPressing = false;
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && !lockPressing)
+                    resetBoard();
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::U) && !lockPressing && movesCount > 0)
+                    undo();
+            }
         }
         window->clear(sf::Color(63, 44, 14));
         updateStatusText();
@@ -591,11 +605,12 @@ void Board :: draw()
         redRect.setPosition(getCellPosition(blackKing->positionX, blackKing->positionY));
         window->draw(redRect);
     }
+    if (selectedPiece != nullptr)
+        displaySelection();
     for (int row = 0; row < 8; row++)
         for (int column = 0; column < 8; column++)
         {
             if (boardMatrix[row][column] == nullptr) continue;
-            if (boardMatrix[row][column] == selectedPiece) displaySelection();
             boardMatrix[row][column]->sprite.setPosition(getCellPosition(row, column));
             window->draw(boardMatrix[row][column]->sprite);
         }
@@ -663,13 +678,11 @@ void Board :: secondClick(int row, int column)
 
 void Board :: resetBoard()
 {
-    // cout << "reset??\n";
     init(primaryBoard);
 }
 
 void Board :: undo()
 {
-    // cout << "undo??" << endl;
     reverseMove();
     finish = false;
     selectedPiece = nullptr;
