@@ -73,8 +73,8 @@ protected:
     vector<string> smartDefenceList, smartMateList;
     bool finish;
     char winner;
-    sf::Font font;
-    sf::Text statusText;
+    sf::Font font, marginFont;
+    sf::Text statusText, marginText;
     sf::Sprite boardImg;
     sf::Texture boardTexture;
     sf::RenderWindow* window;

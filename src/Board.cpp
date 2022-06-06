@@ -5,6 +5,19 @@ Board :: Board (sf::RenderWindow* w) : window(w)
     window->setFramerateLimit(60);
     loadBoardTextures();
     window->setKeyRepeatEnabled(false);
+    font.loadFromFile("resources/fonts/Copenhagen-z3Z0.ttf");
+    statusText.setFont(font);
+    statusText.setCharacterSize(50);
+    statusText.setStyle(sf::Text::Bold);
+    statusText.setFillColor(sf::Color(151, 149, 147));
+    statusText.setPosition(170.f, 505.f);
+    marginFont.loadFromFile("resources/fonts/Caviar_Dreams_Bold.ttf");
+    marginText.setFont(marginFont);
+    marginText.setCharacterSize(11);
+    marginText.setStyle(sf::Text::Regular);
+    marginText.setFillColor(sf::Color(151, 149, 147));
+    marginText.setPosition(345.f, 525.f);
+    marginText.setString("   Press \"R\" to reset game\nPress \"U\" to undo last move");
 }
 
 void Board :: init(string s[8][8])
@@ -137,14 +150,6 @@ void Board :: init(string s[8][8])
         currentPieces[0][i] = nullptr;
     for (int i = whiteIndex; i < 16; i++)
         currentPieces[1][i] = nullptr;
-
-    font.loadFromFile("resources/fonts/Copenhagen-z3Z0.ttf");
-    statusText.setFont(font);
-    statusText.setCharacterSize(50);
-    statusText.setStyle(sf::Text::Bold);
-    statusText.setFillColor(sf::Color(151, 149, 147));
-    statusText.setPosition(170.f, 505.f);
-    updateStatusText();
 }
 
 string Board :: displayMove(Movement m)
@@ -615,6 +620,7 @@ void Board :: draw()
             window->draw(boardMatrix[row][column]->sprite);
         }
     window->draw(statusText);
+    window->draw(marginText);
 }
 
 void Board :: loadBoardTextures()
