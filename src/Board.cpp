@@ -5,19 +5,28 @@ Board :: Board (sf::RenderWindow* w) : window(w)
     window->setFramerateLimit(60);
     loadBoardTextures();
     window->setKeyRepeatEnabled(false);
+
     font.loadFromFile("resources/fonts/Copenhagen-z3Z0.ttf");
     statusText.setFont(font);
     statusText.setCharacterSize(50);
     statusText.setStyle(sf::Text::Bold);
     statusText.setFillColor(sf::Color(151, 149, 147));
     statusText.setPosition(170.f, 505.f);
+
     marginFont.loadFromFile("resources/fonts/Caviar_Dreams_Bold.ttf");
     marginText.setFont(marginFont);
-    marginText.setCharacterSize(11);
+    marginText.setCharacterSize(10);
     marginText.setStyle(sf::Text::Regular);
     marginText.setFillColor(sf::Color(151, 149, 147));
-    marginText.setPosition(345.f, 525.f);
-    marginText.setString("   Press \"R\" to reset game\nPress \"U\" to undo last move");
+    marginText.setPosition(355.f, 525.f);
+    marginText.setString("   Press \'R\' to reset game\nPress \'U\' to undo last move");
+
+    firstPageText.setFont(font);
+    firstPageText.setCharacterSize(60);
+    firstPageText.setStyle(sf::Text::Regular);
+    firstPageText.setFillColor(sf::Color(240,222,176));
+
+    inFirstPage = true;
 }
 
 void Board :: init(string s[8][8])
@@ -458,6 +467,7 @@ bool Board :: smartMate(char turn, int round = 0)
 
 bool Board :: isFinished()
 {
+    if (inFirstPage) return false;
     if ( checkMate( (currentTurn == 1) ? 'W' : 'B') )
     {
         winner = (currentTurn == 1) ? 'B' : 'W';
@@ -581,7 +591,7 @@ void Board :: run()
             if (event.type == sf::Event::MouseButtonReleased)
                 if(event.mouseButton.button == sf::Mouse::Left)
                     lockPressing = false;
-            if (event.type == sf::Event::KeyPressed)
+            if (!inFirstPage && event.type == sf::Event::KeyPressed)
             {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && !lockPressing)
                     resetBoard();
@@ -590,15 +600,19 @@ void Board :: run()
             }
         }
         window->clear(sf::Color(48, 46, 43));
-        updateStatusText();
-        draw();
+        if (inFirstPage)
+            drawFirstPage();
+        else
+        {
+            updateStatusText();
+            draw();
+        }
         window->display();
     }
 }
 
 void Board :: draw()
 {
-    boardImg.setPosition(0.f, 11.f);
     window->draw(boardImg);
     if (currentTurn == 1 && inCheck('W'))
     {
@@ -630,6 +644,12 @@ void Board :: loadBoardTextures()
     float scaleX = 500.f / boardImg.getTexture()->getSize().x;
     float scaleY = 500.f / boardImg.getTexture()->getSize().y;
     boardImg.setScale(scaleX, scaleY);
+    boardImg.setPosition(0.f, 11.f);
+
+    firstPageTexture.loadFromFile("resources/images/firstPage.png");
+    firstPageImg.setTexture(firstPageTexture);
+    firstPageImg.setScale(0.5, 0.5);
+    firstPageImg.setPosition(35.f,340.f);
 
     redRect.setSize(sf::Vector2f(cellSize, cellSize));
     redRect.setFillColor(sf::Color::Red);
@@ -639,27 +659,40 @@ void Board :: loadBoardTextures()
 
     yellowCircle.setRadius(cellSize/6);
     yellowCircle.setFillColor(sf::Color::Yellow);
+
+    optionRect.setSize(sf::Vector2f(cellSize*7, cellSize));
+    optionRect.setFillColor(sf::Color(182,138,93));
 }
 
 void Board :: mouseClicked(const sf::Vector2i& position)
 {
-    // cout << position.x << " " << position.y << endl;
-    static int clickNo = 1;
-    int column = getCellIndex(position.x), row = getCellIndex(position.y);
-    // cout << row << "|" << column << endl;
-    // cout << "click #" << clickNo << endl;
-    if (row == -1 || column == -1)
-        return;
-    if(clickNo == 1)
+    if (inFirstPage)
     {
-        firstClick(row, column);
-        if (selectedPiece != nullptr) clickNo++;
+        if (45 <= position.x && position.x <= 45 + 7*cellSize)
+        {
+            if (70 <= position.y && position.y <= 70 + cellSize)
+                setAsDefault();
+            if (200 <= position.y && position.y <= 200 + cellSize)
+                setWithTerminal();
+        }
     }
     else
     {
-        secondClick(row, column);
-        clickNo--;
-        selectedPiece = nullptr;
+        static int clickNo = 1;
+        int column = getCellIndex(position.x), row = getCellIndex(position.y);
+        if (row == -1 || column == -1)
+            return;
+        if(clickNo == 1)
+        {
+            firstClick(row, column);
+            if (selectedPiece != nullptr) clickNo++;
+        }
+        else
+        {
+            secondClick(row, column);
+            clickNo--;
+            selectedPiece = nullptr;
+        }
     }
 }
 
@@ -727,4 +760,46 @@ vector<Spot> Board :: getAllValidMoves(Piece* piecePtr)
             }
         }
     return spots;
+}
+
+void Board :: drawFirstPage()
+{
+    optionRect.setPosition(sf::Vector2f(45,70));
+    window->draw(optionRect);
+    optionRect.setPosition(sf::Vector2f(45,200));
+    window->draw(optionRect);
+    firstPageText.setPosition(135.f, 65.f);
+    firstPageText.setString("Set pieces as default form");
+    window->draw(firstPageText);
+    firstPageText.setPosition(135.f, 195.f);
+    firstPageText.setString("Set pieces with terminal");
+    window->draw(firstPageText);
+    window->draw(firstPageImg);
+}
+
+void Board :: setAsDefault()
+{
+    string defaultPositions[8][8] = 
+    {
+        {"RB", "NB", "BB", "QB", "KB", "BB", "NB", "RB"},
+        {"PB", "PB", "PB", "PB", "PB", "PB", "PB", "PB"},
+        {"--", "--", "--", "--", "--", "--", "--", "--"},
+        {"--", "--", "--", "--", "--", "--", "--", "--"},
+        {"--", "--", "--", "--", "--", "--", "--", "--"},
+        {"--", "--", "--", "--", "--", "--", "--", "--"},
+        {"PW", "PW", "PW", "PW", "PW", "PW", "PW", "PW"},
+        {"RW", "NW", "BW", "QW", "KW", "BW", "NW", "RW"}
+    };
+    init(defaultPositions);
+    inFirstPage = false;
+}
+
+void Board :: setWithTerminal()
+{
+    string boardStr[8][8];
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            cin >> boardStr[i][j];
+    init(boardStr);
+    inFirstPage = false;
 }

@@ -54,6 +54,12 @@ public:
 
     void undo();
 
+    void drawFirstPage();
+
+    void setAsDefault();
+
+    void setWithTerminal();
+
     vector<Spot> getAllValidMoves(Piece* piecePtr);
 
 protected:
@@ -71,14 +77,14 @@ protected:
     int movesCount;
     short currentTurn;
     vector<string> smartDefenceList, smartMateList;
-    bool finish;
+    bool finish, inFirstPage;
     char winner;
     sf::Font font, marginFont;
-    sf::Text statusText, marginText;
-    sf::Sprite boardImg;
-    sf::Texture boardTexture;
+    sf::Text statusText, marginText, firstPageText;
+    sf::Sprite boardImg, firstPageImg;
+    sf::Texture boardTexture, firstPageTexture;
     sf::RenderWindow* window;
-    sf::RectangleShape redRect, yellowRect;
+    sf::RectangleShape redRect, yellowRect, optionRect;
     sf::CircleShape yellowCircle;
     int clickNo;
 };
