@@ -648,8 +648,8 @@ void Board :: loadBoardTextures()
 
     firstPageTexture.loadFromFile("resources/images/firstPage.png");
     firstPageImg.setTexture(firstPageTexture);
-    firstPageImg.setScale(0.5, 0.5);
-    firstPageImg.setPosition(35.f,340.f);
+    firstPageImg.setScale(0.3, 0.3);
+    firstPageImg.setPosition(90.f,255.f);
 
     redRect.setSize(sf::Vector2f(cellSize, cellSize));
     redRect.setFillColor(sf::Color::Red);
@@ -672,7 +672,7 @@ void Board :: mouseClicked(const sf::Vector2i& position)
         {
             if (70 <= position.y && position.y <= 70 + cellSize)
                 setAsDefault();
-            if (200 <= position.y && position.y <= 200 + cellSize)
+            if (180 <= position.y && position.y <= 180 + cellSize)
                 setWithTerminal();
         }
     }
@@ -766,12 +766,12 @@ void Board :: drawFirstPage()
 {
     optionRect.setPosition(sf::Vector2f(45,70));
     window->draw(optionRect);
-    optionRect.setPosition(sf::Vector2f(45,200));
+    optionRect.setPosition(sf::Vector2f(45,180));
     window->draw(optionRect);
     firstPageText.setPosition(135.f, 65.f);
     firstPageText.setString("Set pieces as default form");
     window->draw(firstPageText);
-    firstPageText.setPosition(135.f, 195.f);
+    firstPageText.setPosition(135.f, 175.f);
     firstPageText.setString("Set pieces with terminal");
     window->draw(firstPageText);
     window->draw(firstPageImg);
